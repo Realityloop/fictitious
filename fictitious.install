@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install file for Fictitious Inc.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function fictitious_install() {
+  // Ensure Bootstrap theme is enabled and Bartik is disabled.
+  theme_enable(array('bootstrap'));
+  theme_disable(array('bartik'));
+}

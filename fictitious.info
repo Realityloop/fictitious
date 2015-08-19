@@ -1,0 +1,9 @@
+name = Fictitious Inc.
+description = Installation profile for Fictitious Inc.
+core = 7.x
+
+
+
+; Dependencies
+
+dependencies[] = fictitious_core

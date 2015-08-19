@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Fictitious Inc. core feature.
+ */
+
+include_once 'fictitious_core.features.inc';

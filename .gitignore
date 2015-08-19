@@ -1,0 +1,7 @@
+# Ensure only custom code is contributed.
+
+libraries/*
+modules/*
+!modules/custom
+themes/*
+!themes/custom
