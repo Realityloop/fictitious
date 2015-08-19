@@ -7,3 +7,9 @@ core = 7.x
 ; Dependencies
 
 dependencies[] = fictitious_core
+
+
+
+; Files - Simpletest
+
+files[] = tests/fictitious.test

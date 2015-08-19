@@ -1,0 +1,176 @@
+<?php
+
+/**
+ * @file
+ * Tests for the Fictitious Inc.
+ */
+
+/**
+ * Class FictitiousTestCase
+ */
+class FictitiousTestCase extends DrupalWebTestCase {
+  protected $profile = 'fictitious';
+  public $auth_user = NULL;
+
+  /**
+   * @inheritdoc
+   */
+  function setUp() {
+    // Setup required modules.
+    $info    = system_get_info('module', 'fictitious_core');
+    $modules = array('fictitious_core') + $info['dependencies'];
+    parent::setUp($modules);
+
+    // Flush caches and revert features.
+    _fictitious_core_flush_revert();
+
+    $this->auth_user = $this->drupalCreateUser(array('access site reports'));
+  }
+}
+
+/**
+ * Class ContactFictitiousTestCase
+ */
+class ContactFictitiousTestCase extends FictitiousTestCase {
+  /**
+   * @inheritdoc
+   */
+  public static function getInfo() {
+    return array(
+      'name'        => 'Contact form',
+      'description' => 'Test Fictitious contact form functionality.',
+      'group'       => 'Fictitious Inc.',
+    );
+  }
+
+  /**
+   * Test the Fictitious contact form with the various enquiry types.
+   */
+  public function testContact() {
+    // Navigate to the front page.
+    $this->drupalGet('');
+
+    // Ensure link to 'Contact' page is available.
+    $this->assertLink(t('Contact'));
+
+    // Test each enquiry type.
+    $enquiry_types = array(
+      'support' => 'Support',
+      'sales'   => 'Sales',
+      'general' => 'General enquiry',
+    );
+    foreach ($enquiry_types as $type => $name) {
+      // Click the link to 'Contact' page.
+      $this->clickLink(t('Contact'));
+
+      // Ensure that we were taken to '/contact'.
+      $this->assertUrl('contact');
+
+      // Build dummy data to be used on the contact form.
+      $values = array(
+        'field_contact_type[und]'              => $type,
+        'field_first_name[und][0][value]'      => $this->randomName(),
+        'field_last_name[und][0][value]'       => $this->randomName(),
+        'field_email[und][0][email]'           => "{$this->randomName()}@fictitious.inc",
+        'field_contact_subject[und][0][value]' => $this->randomName(),
+        'field_contact_message[und][0][value]' => $this->randomName(),
+      );
+
+      // Submit the contact form with our dummy data.
+      $this->drupalPost(NULL, $values, t('Submit'));
+
+      // Login to our site with our authenticated user.
+      $this->drupalLogin($this->auth_user);
+
+      // Navigate to the 'Recent log messages' page.
+      $this->drupalGet('admin/reports/dblog');
+
+      // Test our emails per enquiry type.
+      switch ($type) {
+
+        // Support.
+        case 'support':
+          // Use xpath to get the email message URL (href) from the fourth line
+          // of the '#admin-dblog' table.
+          $element = $this->xpath('//table[@id=:id]//tr[4]//a/@href', array(':id' => 'admin-dblog'));
+          $email   = (string) $element[0];
+
+          // Use xpath to get the auto-response message URL (href) from the
+          // third line of the '#admin-dblog' table.
+          $element  = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
+          $response = (string) $element[0];
+
+          // Navigate to the response email log message.
+          $this->drupalGet($response);
+
+          // Ensure that the response email recipient is correct.
+          $this->assertText("to: {$values['field_email[und][0][email]']}", t('@name response sent to correct email.', array('@name' => $name)));
+
+          // Ensure that the response email subject is correct.
+          $this->assertText("Thank you for contacting Fictitious Inc.", t('@name response email subject is correct.', array('@name' => $name)));
+
+          // Ensure that the email has the correct body content.
+          $this->assertRaw("Hi {$values['field_first_name[und][0][value]']},\r\n\r\nYour support request has been received and a Fictitious employee will be in contact within 2 working days.", t('@name recipient email body is correct.', array('@name' => $name)));
+
+          break;
+
+        // Sales.
+        case 'sales':
+          // Use xpath to get the email message URL (href) from the fourth line
+          // of the '#admin-dblog' table.
+          $element = $this->xpath('//table[@id=:id]//tr[4]//a/@href', array(':id' => 'admin-dblog'));
+          $email   = (string) $element[0];
+
+          // Use xpath to get the auto-response message URL (href) from the
+          // third line of the '#admin-dblog' table.
+          $element  = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
+          $response = (string) $element[0];
+
+          // Navigate to the response email log message.
+          $this->drupalGet($response);
+
+          // Ensure that the response email recipient is correct.
+          $this->assertText("to: {$values['field_email[und][0][email]']}", t('@name response sent to correct email.', array('@name' => $name)));
+
+          // Ensure that the response email subject is correct.
+          $this->assertText("Thank you for contacting Fictitious Inc.", t('@name response email subject is correct.', array('@name' => $name)));
+
+          // Ensure that the email has the correct body content.
+          $this->assertRaw("Hi {$values['field_first_name[und][0][value]']},\r\n\r\nThank you for contacting the Fictitious sales department. Your business is important to us and a member of the sales team will get in contact with you as soon as possible.", t('@name recipient email body is correct.', array('@name' => $name)));
+
+          break;
+
+        // General enquiry
+        case 'general':
+          // Use xpath to get the email message URL (href) from the third line
+          // of the '#admin-dblog' table.
+          $element = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
+          $email   = (string) $element[0];
+
+          break;
+
+      }
+
+      if (isset($email)) {
+        // Navigate to the email log message.
+        $this->drupalGet($email);
+
+        // Ensure that the email recipient is correct.
+        $recipient = $type == 'general' ? 'info' : $type;
+        $this->assertText("to: {$recipient}@fictitious.inc", t('@name sent to @recipient@fictitious.inc.', array(
+          '@name'      => $name,
+          '@recipient' => $recipient
+        )));
+
+        // Ensure that the email subject is correct.
+        $this->assertText("[{$name}] {$values['field_contact_subject[und][0][value]']}", t('@name email subject is correct.', array('@name' => $name)));
+
+        // Ensure that the email has the correct body content.
+        $this->assertRaw("First name: {$values['field_first_name[und][0][value]']}\r\nLast name: {$values['field_last_name[und][0][value]']}\r\nMessage:\r\n\r\n{$values['field_contact_message[und][0][value]']}", t('@name email body is correct.', array('@name' => $name)));
+      }
+
+      // Logout.
+      $this->drupalLogout();
+    }
+  }
+}

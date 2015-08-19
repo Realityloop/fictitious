@@ -7,6 +7,8 @@ api = 2
 
 projects[drupal][type] = core
 projects[drupal][version] = 7.38
+; Simpletest doesn't respect 'button' element - https://www.drupal.org/node/1481148#comment-7045568
+projects[drupal][patch][] = https://www.drupal.org/files/1481148-4-simpletest-button-submit.patch
 
 
 
