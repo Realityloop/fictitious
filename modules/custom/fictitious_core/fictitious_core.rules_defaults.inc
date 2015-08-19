@@ -30,7 +30,7 @@ function fictitious_core_default_rules_configuration() {
               { "mail" : {
                   "to" : "support@fictitious.inc",
                   "subject" : "[[entityform:field-contact-type]] [entityform:field-contact-subject]",
-                  "message" : "First name: [entityform:field-first-name]\\r\\nLast name: [entityform:field-last-name]\\r\\nMessage:\\r\\n\\r\\n[entityform:field-last-name]",
+                  "message" : "First name: [entityform:field-first-name]\\r\\nLast name: [entityform:field-last-name]\\r\\nMessage:\\r\\n\\r\\n[entityform:field-contact-message]",
                   "from" : [ "entityform:field-email" ],
                   "language" : [ "" ]
                 }
@@ -61,7 +61,7 @@ function fictitious_core_default_rules_configuration() {
               { "mail" : {
                   "to" : "sales@fictitious.inc",
                   "subject" : "[[entityform:field-contact-type]] [entityform:field-contact-subject]",
-                  "message" : "First name: [entityform:field-first-name]\\r\\nLast name: [entityform:field-last-name]\\r\\nMessage:\\r\\n\\r\\n[entityform:field-last-name]",
+                  "message" : "First name: [entityform:field-first-name]\\r\\nLast name: [entityform:field-last-name]\\r\\nMessage:\\r\\n\\r\\n[entityform:field-contact-message]",
                   "from" : [ "entityform:field-email" ],
                   "language" : [ "" ]
                 }
@@ -92,7 +92,7 @@ function fictitious_core_default_rules_configuration() {
               { "mail" : {
                   "to" : "info@fictitious.inc",
                   "subject" : "[[entityform:field-contact-type]] [entityform:field-contact-subject]",
-                  "message" : "First name: [entityform:field-first-name]\\r\\nLast name: [entityform:field-last-name]\\r\\nMessage:\\r\\n\\r\\n[entityform:field-last-name]",
+                  "message" : "First name: [entityform:field-first-name]\\r\\nLast name: [entityform:field-last-name]\\r\\nMessage:\\r\\n\\r\\n[entityform:field-contact-message]",
                   "from" : [ "entityform:field-email" ],
                   "language" : [ "" ]
                 }
