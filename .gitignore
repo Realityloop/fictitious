@@ -5,3 +5,10 @@ modules/*
 !modules/custom
 themes/*
 !themes/custom
+
+
+
+# Vagrant related files.
+
+.vagrant
+docroot
