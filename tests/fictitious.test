@@ -92,12 +92,12 @@ class ContactFictitiousTestCase extends FictitiousTestCase {
         case 'support':
           // Use xpath to get the email message URL (href) from the fourth line
           // of the '#admin-dblog' table.
-          $element = $this->xpath('//table[@id=:id]//tr[4]//a/@href', array(':id' => 'admin-dblog'));
+          $element = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
           $email   = (string) $element[0];
 
           // Use xpath to get the auto-response message URL (href) from the
           // third line of the '#admin-dblog' table.
-          $element  = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
+          $element  = $this->xpath('//table[@id=:id]//tr[2]//a/@href', array(':id' => 'admin-dblog'));
           $response = (string) $element[0];
 
           // Navigate to the response email log message.
@@ -118,12 +118,12 @@ class ContactFictitiousTestCase extends FictitiousTestCase {
         case 'sales':
           // Use xpath to get the email message URL (href) from the fourth line
           // of the '#admin-dblog' table.
-          $element = $this->xpath('//table[@id=:id]//tr[4]//a/@href', array(':id' => 'admin-dblog'));
+          $element = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
           $email   = (string) $element[0];
 
           // Use xpath to get the auto-response message URL (href) from the
           // third line of the '#admin-dblog' table.
-          $element  = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
+          $element  = $this->xpath('//table[@id=:id]//tr[2]//a/@href', array(':id' => 'admin-dblog'));
           $response = (string) $element[0];
 
           // Navigate to the response email log message.
@@ -144,7 +144,7 @@ class ContactFictitiousTestCase extends FictitiousTestCase {
         case 'general':
           // Use xpath to get the email message URL (href) from the third line
           // of the '#admin-dblog' table.
-          $element = $this->xpath('//table[@id=:id]//tr[3]//a/@href', array(':id' => 'admin-dblog'));
+          $element = $this->xpath('//table[@id=:id]//tr[2]//a/@href', array(':id' => 'admin-dblog'));
           $email   = (string) $element[0];
 
           break;
